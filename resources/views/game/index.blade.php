@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar Permainan - Platform Game Edukasi</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to bottom, #87CEEB 0%, #E0F7FA 60%, #FFFFFF 100%);
+            color: #1e293b;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Efek Gelembung */
+        .bubbles {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 1;
+        }
+        .bubble {
+            position: absolute; bottom: -150px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 50%;
+            box-shadow: 0 0 25px rgba(255, 255, 255, 0.9);
+            animation: rise linear infinite;
+        }
+        @keyframes rise {
+            0% { 
+                transform: translateY(0) translateX(0) rotate(0deg); 
+                opacity: 0.7; 
+            }
+            50% { 
+                transform: translateY(-50vh) translateX(30px) rotate(180deg); 
+                opacity: 0.8; 
+            }
+            100% { 
+                transform: translateY(-140vh) translateX(60px) rotate(360deg); 
+                opacity: 0; 
+            }
+        }
+        .bubble:nth-child(1) { width: 60px; height: 60px; left: 8%; animation-duration: 15s; animation-delay: 0s; }
+        .bubble:nth-child(2) { width: 80px; height: 80px; left: 22%; animation-duration: 20s; animation-delay: 2s; }
+        .bubble:nth-child(3) { width: 40px; height: 40px; left: 35%; animation-duration: 12s; animation-delay: 5s; }
+        .bubble:nth-child(4) { width: 100px; height: 100px; left: 50%; animation-duration: 22s; animation-delay: 1s; }
+        .bubble:nth-child(5) { width: 70px; height: 70px; left: 65%; animation-duration: 18s; animation-delay: 7s; }
+        .bubble:nth-child(6) { width: 50px; height: 50px; left: 80%; animation-duration: 14s; animation-delay: 4s; }
+        .bubble:nth-child(7) { width: 90px; height: 90px; left: 12%; animation-duration: 19s; animation-delay: 3s; }
+        .bubble:nth-child(8) { width: 55px; height: 55px; left: 92%; animation-duration: 16s; animation-delay: 6s; }
+        .bubble:nth-child(9) { width: 65px; height: 65px; left: 45%; animation-duration: 17s; animation-delay: 8s; }
+        .bubble:nth-child(10) { width: 75px; height: 75px; left: 28%; animation-duration: 21s; animation-delay: 4s; }
+
+        header {
+            text-align: center;
+            padding: 60px 20px;
+            background: rgba(255, 255, 255, 0.5);
+            position: relative;
+            z-index: 2;
+        }
+        h1 {
+            font-size: 3.5rem;
+            color: #1e3a8a;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.9);
+        }
+        header p {
+            font-size: 1.3rem;
+            color: #334155;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 20px; left: 20px;
+            background: #FFD700;
+            color: #1e293b;
+            padding: 12px 24px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            box-shadow: 0 8px 20px rgba(255,215,0,0.4);
+            z-index: 3;
+        }
+        .back-btn:hover {
+            background: #FFEC8B;
+            transform: scale(1.05);
+        }
+
+        .games-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+            padding: 40px 8%;
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+        .game-card {
+            background: rgba(255, 255, 255, 0.9);
+            border: 6px solid #FFFFFF;
+            border-radius: 30px;
+            padding: 40px 30px;
+            text-align: center;
+            transition: all 0.4s ease;
+            box-shadow: 0 15px 40px rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(10px);
+        }
+        .game-card:hover {
+            transform: translateY(-15px) scale(1.05);
+            box-shadow: 0 25px 60px rgba(255, 255, 255, 0.7);
+            border-color: #FFFFFF;
+        }
+        .game-placeholder {
+            background: #E0F7FA;
+            height: 200px;
+            border-radius: 25px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4.5rem;
+            color: #87CEEB;
+        }
+        .game-card h3 {
+            font-size: 1.8rem;
+            color: #1e3a8a;
+            margin: 15px 0;
+        }
+        .game-card p {
+            font-size: 1.1rem;
+            color: #334155;
+            margin-bottom: 25px;
+        }
+        .play-btn {
+            background: #FFD700;
+            color: #1e293b;
+            padding: 14px 32px;
+            border: none;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(255,215,0,0.4);
+            font-size: 1.1rem;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .play-btn:hover {
+            background: #FFEC8B;
+            transform: translateY(-3px);
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.8);
+            color: #1e3a8a;
+            position: relative;
+            z-index: 2;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bubbles">
+        <div class="bubble"></div><div class="bubble"></div><div class="bubble"></div>
+        <div class="bubble"></div><div class="bubble"></div><div class="bubble"></div>
+        <div class="bubble"></div><div class="bubble"></div><div class="bubble"></div>
+        <div class="bubble"></div>
+    </div>
+
+    <a href="{{ route('home') }}" class="back-btn">← Kembali ke Home</a>
+
+    <header>
+        <h1>🌊 Platform Game Edukasi 🫧</h1>
+        <p>Belajar dengan petualangan seru di lautan pengetahuan yang cerah!</p>
+        @if(session('student_name'))
+            <p style="font-size: 1.8rem; color: #1e3a8a; margin-top: 20px; font-weight: bold; background: rgba(255,255,255,0.8); padding: 15px 30px; border-radius: 50px; display: inline-block; box-shadow: 0 8px 20px rgba(30,58,138,0.2);">
+                🎉 Selamat datang, {{ session('student_name') }}! 🎉
+            </p>
+        @endif
+    </header>
+
+    <div class="games-container">
+        @forelse($games as $game)
+            <div class="game-card">
+                <div class="game-placeholder">
+                    @if($game->thumbnail)
+                        <img src="{{ asset($game->thumbnail) }}" alt="{{ $game->title }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 25px;">
+                    @else
+                        🎮
+                    @endif
+                </div>
+                <h3>{{ $game->title }}</h3>
+                <p>{{ $game->description }}</p>
+                
+                <!-- Game Info -->
+                <div style="margin: 10px 0; font-size: 0.85rem; color: #64748b;">
+                    @if($game->teacher)
+                        <div style="margin-bottom: 5px;">
+                            <span style="font-weight: 600;">👨‍🏫 Mentor:</span> {{ $game->teacher->name }}
+                        </div>
+                    @endif
+                    @if($game->class_level !== null && $game->class_level !== '')
+                        <div>
+                            <span style="font-weight: 600;">🎯 Kelas:</span> 
+                            @if($game->class_level == 0)
+                                Semua Kelas (1-6)
+                            @else
+                                Kelas {{ $game->class_level }}
+                            @endif
+                        </div>
+                    @endif
+                </div>
+                
+                <form action="{{ route('games.start', $game->slug) }}" method="POST" style="margin: 0;">
+                    @csrf
+                    <button type="submit" class="play-btn">
+                        🚀 Main Sekarang
+                    </button>
+                </form>
+            </div>
+        @empty
+            <div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px;">
+                <h2 style="color: #1e3a8a; font-size: 2rem;">📭 Belum Ada Game</h2>
+                <p style="color: #334155; font-size: 1.2rem; margin-top: 10px;">
+                    Silakan tambahkan game melalui admin panel!
+                </p>
+            </div>
+        @endforelse
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Platform Game Edukasi. Belajar jadi menyenangkan!</p>
+    </footer>
+
+</body>
+</html>
